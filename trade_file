@@ -1,0 +1,5 @@
+map_params = {
+        "ll": ','.join([sh, dol]),
+        "spn": '0.2,0.2',
+        "l": "map"
+    }
