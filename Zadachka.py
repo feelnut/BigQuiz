@@ -31,13 +31,14 @@ def draw_screen():
     except IOError as ex:
         print("Ошибка записи временного файла:", ex)
         sys.exit(2)
-    screen.blit(pygame.image.load(map_file), (0, 0))
+    pygame.draw.rect(screen, pygame.Color('white'), (2, 2, 243, 43), 2)
+    screen.blit(pygame.image.load(map_file), (0, 50))
     os.remove(map_file)
 
 
 # Инициализируем pygame
 pygame.init()
-screen = pygame.display.set_mode((600, 450))
+screen = pygame.display.set_mode((600, 500))
 
 sh, dol = 61.402554, 55.159897
 spn = 0.005
@@ -73,7 +74,7 @@ while running:
             elif sh <= -180:
                 sh += 360
         if event.type == pygame.MOUSEBUTTONDOWN\
-            and event.button == 1:
+            and event.button == 3:
             current_map += 1
             current_map %= 3
     draw_screen()
