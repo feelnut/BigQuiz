@@ -53,7 +53,7 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_PAGEDOWN:
-                spn -= spn / 1.2 if spn >= 0.0001 else 0
+                spn -= spn / 2.2 if spn >= 0.0001 else 0
             elif event.key == pygame.K_PAGEUP:
                 spn += spn / 1.2 if spn <= 15 else 0
             elif event.key == pygame.K_DOWN:
@@ -64,17 +64,18 @@ while running:
                 sh -= spn / 3
             elif event.key == pygame.K_RIGHT:
                 sh += spn / 3
-            if dol >= 180:
-                dol -= 360
-            elif dol <= -180:
-                dol += 360
-            if sh >= 90:
-                sh -= 180
-            elif sh <= -90:
-                sh += 180
+            if dol >= 80:
+                dol -= 130
+            elif dol <= -50:
+                dol += 130
+            if sh >= 180:
+                sh -= 360
+            elif sh <= -180:
+                sh += 360
         if event.type == pygame.MOUSEBUTTONDOWN\
             and event.button == 1:
             current_map += 1
+            current_map %= 3
     draw_screen()
     pygame.display.flip()
 
