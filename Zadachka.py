@@ -59,6 +59,12 @@ def draw_screen():
     text_rect.center = (122, 23)
     screen.blit(text, text_rect)
 
+    pygame.draw.rect(screen, pygame.Color('white'), (460, 2, 130, 44), 2)
+    text3 = font.render('Очистить поиск', True, pygame.Color('orange'))
+    text3_rect = text3.get_rect()
+    text3_rect.center = (525, 23)
+    screen.blit(text3, text3_rect)
+
     os.remove(map_file)
 
 
@@ -69,6 +75,7 @@ screen = pygame.display.set_mode((600, 500))
 api_key = "dda3ddba-c9ea-4ead-9010-f43fbc15c6e3"
 search_api_server = "https://search-maps.yandex.ru/v1/"
 sh, dol = 61.402554, 55.159897
+copy_of_coords = [61.402554, 55.159897]
 spn = 0.005
 search_color = 'grey'
 maps = ['map', 'sat', 'skl']
@@ -166,6 +173,8 @@ while running:
                     search_color = 'grey'
                     draw_screen()
                     pygame.display.flip()
+                elif 460 <= x <= 590 and 2 <= y <= 46:
+                    pts = ''
     draw_screen()
     pygame.display.flip()
 
