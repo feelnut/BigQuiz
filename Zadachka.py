@@ -3,13 +3,13 @@ import requests
 import sys
 import os
 
-
+# Изменение типов карты происходит через нажатие на правую кнопку мыши
 def draw_screen():
     response = None
     map_params = {
         "ll": ','.join([str(sh), str(dol)]),
         "spn": ','.join([str(spn), str(spn)]),
-        "l": "map"
+        "l": maps[current_map]
     }
     try:
         map_request = "http://static-maps.yandex.ru/1.x/"
@@ -41,6 +41,8 @@ screen = pygame.display.set_mode((600, 450))
 
 sh, dol = 61.402554, 55.159897
 spn = 0.005
+maps = ['map', 'sat', 'skl']
+current_map = 0
 running = True
 pygame.display.flip()
 while running:
@@ -52,24 +54,27 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_PAGEDOWN:
                 spn -= spn / 1.2 if spn >= 0.0001 else 0
-            if event.key == pygame.K_PAGEUP:
+            elif event.key == pygame.K_PAGEUP:
                 spn += spn / 1.2 if spn <= 15 else 0
-            if event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN:
                 dol -= spn / 5
-            if event.key == pygame.K_UP:
+            elif event.key == pygame.K_UP:
                 dol += spn / 5
-            if event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_LEFT:
                 sh -= spn / 3
-            if event.key == pygame.K_RIGHT:
+            elif event.key == pygame.K_RIGHT:
                 sh += spn / 3
             if dol >= 180:
                 dol -= 360
-            if dol <= -180:
+            elif dol <= -180:
                 dol += 360
             if sh >= 90:
                 sh -= 180
-            if sh <= -90:
+            elif sh <= -90:
                 sh += 180
+        if event.type == pygame.MOUSEBUTTONDOWN\
+            and event.button == 1:
+            current_map += 1
     draw_screen()
     pygame.display.flip()
 
