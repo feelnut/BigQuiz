@@ -97,6 +97,7 @@ current_map = 0
 pts = ''
 name = '|'
 address = ''
+index_data = ''
 index = False
 running = True
 pygame.display.flip()
@@ -182,14 +183,13 @@ while running:
                         organization = json_response["features"][0]
                         coords = organization['properties']['boundedBy']
                         point = organization["geometry"]["coordinates"]
+                        try:
+                            index_data = organization['properties']['CompanyMetaData']['postalCode']
+                        except:
+                            index_data = 'Не найден'
                         if index:
-                            try:
-                                address = organization['properties']['CompanyMetaData']['address'] + \
-                                          ' Индекс: ' + \
-                                          organization['properties']['CompanyMetaData']['postalCode']
-                            except:
-                                address = organization['properties']['CompanyMetaData']['address'] + \
-                                          ' Индекс: Не найден'
+                            address = organization['properties']['CompanyMetaData']['address'] + \
+                                      ' Индекс: ' + index_data
                         else:
                             address = organization['properties']['CompanyMetaData']['address']
                         sh, dol = point
@@ -206,6 +206,11 @@ while running:
                     pygame.display.flip()
                 elif 5 <= x <= 145 and 555 <= y <= 595:
                     index = not index
+                    if organization and index:
+                        address = organization['properties']['CompanyMetaData']['address'] + \
+                                  ' Индекс: ' + index_data
+                    elif organization:
+                        address = organization['properties']['CompanyMetaData']['address']
                     draw_screen()
                     pygame.display.flip()
     draw_screen()
