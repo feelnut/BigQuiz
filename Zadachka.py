@@ -65,12 +65,21 @@ def draw_screen():
     text3_rect.center = (525, 23)
     screen.blit(text3, text3_rect)
 
+    pygame.draw.rect(screen, pygame.Color('white'), (5, 505, 590, 40), 2)
+    if address:
+        text4 = font.render(address, True, pygame.Color('orange'))
+        text4_rect = text4.get_rect()
+        text4_rect.center = (300, 525)
+        screen.blit(text4, text4_rect)
+    else:
+        pygame.draw.rect(screen, pygame.Color('black'), (7, 507, 584, 36))
+
     os.remove(map_file)
 
 
 # Инициализируем pygame
 pygame.init()
-screen = pygame.display.set_mode((600, 500))
+screen = pygame.display.set_mode((600, 550))
 
 api_key = "dda3ddba-c9ea-4ead-9010-f43fbc15c6e3"
 search_api_server = "https://search-maps.yandex.ru/v1/"
@@ -82,6 +91,7 @@ maps = ['map', 'sat', 'skl']
 current_map = 0
 pts = ''
 name = '|'
+address = ''
 running = True
 pygame.display.flip()
 while running:
@@ -166,6 +176,7 @@ while running:
                         organization = json_response["features"][0]
                         coords = organization['properties']['boundedBy']
                         point = organization["geometry"]["coordinates"]
+                        address = organization['properties']['CompanyMetaData']['address']
                         sh, dol = point
                         spn = (get_spn(coords)[0] + get_spn(coords)[1]) / 2
                         pts = "{0},{1},pm2vvl".format(point[0], point[1])
@@ -175,6 +186,9 @@ while running:
                     pygame.display.flip()
                 elif 460 <= x <= 590 and 2 <= y <= 46:
                     pts = ''
+                    address = ''
+                    draw_screen()
+                    pygame.display.flip()
     draw_screen()
     pygame.display.flip()
 
