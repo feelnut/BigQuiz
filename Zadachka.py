@@ -2,6 +2,7 @@ import pygame
 import requests
 import sys
 import os
+from pprint import pprint
 from spn_tester import get_spn
 
 
@@ -67,7 +68,7 @@ def draw_screen():
 
     pygame.draw.rect(screen, pygame.Color('white'), (5, 505, 590, 40), 2)
     pygame.draw.rect(screen, pygame.Color('black'), (7, 507, 584, 36))
-    text4 = font.render(address, True, pygame.Color('orange'))
+    text4 = font.render(address_sc, True, pygame.Color('orange'))
     text4_rect = text4.get_rect()
     text4_rect.center = (300, 525)
     screen.blit(text4, text4_rect)
@@ -96,7 +97,7 @@ maps = ['map', 'sat', 'skl']
 current_map = 0
 pts = ''
 name = '|'
-address = ''
+address_sc = ''
 index_data = ''
 index = False
 running = True
@@ -183,15 +184,20 @@ while running:
                         organization = json_response["features"][0]
                         coords = organization['properties']['boundedBy']
                         point = organization["geometry"]["coordinates"]
+                        geocoder_request = "http://geocode-maps.yandex.ru/1.x/?geocode={}&format=json".format('+'.join(organization['properties']['CompanyMetaData']['address'].split()))
+                        response = requests.get(geocoder_request)
+                        if response:
+                            json_response = response.json()
+                            toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
+                            address = toponym['metaDataProperty']['GeocoderMetaData']['Address']['formatted']
                         try:
                             index_data = organization['properties']['CompanyMetaData']['postalCode']
                         except:
                             index_data = 'Не найден'
                         if index:
-                            address = organization['properties']['CompanyMetaData']['address'] + \
-                                      ' Индекс: ' + index_data
+                            address_sc = address + ' Индекс: ' + index_data
                         else:
-                            address = organization['properties']['CompanyMetaData']['address']
+                            address_sc = address
                         sh, dol = point
                         spn = (get_spn(coords)[0] + get_spn(coords)[1]) / 2
                         pts = "{0},{1},pm2vvl".format(point[0], point[1])
@@ -207,10 +213,10 @@ while running:
                 elif 5 <= x <= 145 and 555 <= y <= 595:
                     index = not index
                     if organization and index:
-                        address = organization['properties']['CompanyMetaData']['address'] + \
+                        address_sc = address + \
                                   ' Индекс: ' + index_data
                     elif organization:
-                        address = organization['properties']['CompanyMetaData']['address']
+                        address_sc = address
                     draw_screen()
                     pygame.display.flip()
     draw_screen()
